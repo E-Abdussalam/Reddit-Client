@@ -4,7 +4,7 @@ import "./App.css";
 import Header from "./features/Header/Header";
 import Home from "./features/Home/Home";
 import Subreddits from "./features/Subreddits/Subreddits";
-import { getSubreddits } from "./Api/reddit";
+
 function App() {
   return (
     <>

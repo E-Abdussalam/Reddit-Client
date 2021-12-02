@@ -1,7 +1,7 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { getSubredditPosts, getPostComments } from "../Api/reddit";
 
-initialState = {
+const initialState = {
   posts: [],
   error: false,
   isLoading: false,
@@ -22,7 +22,7 @@ const redditSlice = createSlice({
     },
     getPostsSuccess(state, action) {
       state.isLoading = false;
-      state.error = action.payload;
+      state.posts = action.payload;
     },
     getPostsFailed(state) {
       state.isLoading = false;
@@ -41,7 +41,7 @@ const redditSlice = createSlice({
     },
     startGetComments(state, action) {
       state.posts[action.payload].showingComments =
-        !state.post[action.payload].showingComments;
+        !state.posts[action.payload].showingComments;
       if (!state.posts[action.payload].showingComments) {
         return;
       }
@@ -70,13 +70,14 @@ export const {
   toggleShowingComments,
   getCommentsSuccess,
   getCommentsFailed,
+  startGetComments,
 } = redditSlice.actions;
 
 export default redditSlice.reducer;
 
 // This is a Redux Thunk that gets posts from a subreddit.
 
-export const fetchPosts = (subreddit) => async () => {
+export const fetchPosts = (subreddit) => async (dispatch) => {
   try {
     dispatch(startGetPosts());
     const posts = await getSubredditPosts(subreddit);
@@ -99,13 +100,14 @@ export const fetchComments = (index, permalink) => async (dispatch) => {
   try {
     dispatch(startGetComments(index));
     const comments = await getPostComments(permalink);
+
     dispatch(getCommentsSuccess({ index, comments }));
   } catch (error) {
     dispatch(getCommentsFailed(index));
   }
 };
 
-export const selectPosts = (state) => state.reddit.post;
+export const selectPosts = (state) => state.reddit.posts;
 export const selectSerchTerm = (state) => state.reddit.searchTerm;
 export const selectSelectedSubreddit = (state) =>
   state.reddit.selectedSubreddit;

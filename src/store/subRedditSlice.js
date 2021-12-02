@@ -17,7 +17,7 @@ const subRedditSlice = createSlice({
     },
     getSubredditsSuccess(state, action) {
       state.isLoading = false;
-      state.error = action.payload;
+      state.subreddits = action.payload;
     },
     getSubredditsFailed(state) {
       state.isLoading = false;
